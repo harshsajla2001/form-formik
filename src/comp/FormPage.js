@@ -5,6 +5,9 @@ import * as Yup from 'yup'
 import React, { useEffect, useState } from 'react'
 import TextfieldWrapper from './Textfield';
 import SelectWrapper from './Select';
+import AddIcon from '@mui/icons-material/Add';
+import RedoIcon from '@mui/icons-material/Redo';
+import DoneIcon from '@mui/icons-material/Done';
 
 
 const INITIAL_FORM_STATE = {
@@ -16,100 +19,74 @@ const INITIAL_FORM_STATE = {
 
 const FORM_VALIDATION = Yup.object().shape({
     name: Yup.string().required('Required'),
-    income: Yup.number("Enter numbers").required('Required'),
+    income: Yup.number().required('Required'),
     profession: Yup.string().required('Required'),
-    age: Yup.number().integer().required('Required')
+    age: Yup.number().min(18).max(60).integer().required('Required')
 });
 
-// const validationSchema = Yup.object().shape({
-//     name: Yup.string().required('Required'),
-//     income: Yup.number()
-//         .required('Required'),
-//     profession: Yup.string().required('Required'),
-//     age: Yup.number().required('Required')
-// })
 const professionOption = {
-    reactDev: 'React developer',
-    PythonDev: 'Python developer',
-    netDev: '.Net developer',
-}
-const ageOption = {
-    reactDev: 'React developer',
-    PythonDev: 'Python developer',
-    netDev: '.Net developer',
-}
-const savedValue = {
-    name: 'harsh',
-    income: '12000',
-    profession: 'reactDev',
-    age: '23',
+    reactDevloper: 'React developer',
+    PythonDevloper: 'Python developer',
+    dotNetDevloper: 'DotNet developer',
 }
 
 function FormPage() {
     const [formValues, setFormValues] = useState(null)
-    const [employeeDB, setEmployeeDB] = useState(null)
-    const [editId, seteditId] = useState(null)
-    const [submit, setSubmit] = useState(null)
-
+    const [employeeDB, setEmployeeDB] = useState([])
+    const [editId, setEditId] = useState(null)
+    const [toggle, setToggle] = useState(true)
 
     const postEmployee = (employee) => {
         axios.post("http://localhost:3004/employee", employee)
-            .then((data) => {
-                console.log(data.data);
+            .then(() => {
+                getEmployee()
             })
             .catch((err) => console.log(err));
     }
     const getEmployee = () => {
         axios.get("http://localhost:3004/employee")
             .then((data) => {
-                // console.log(data.data);
                 setEmployeeDB(data.data);
             })
             .catch((err) => console.log(err));
     }
     const deleteEmployee = (id) => {
         axios.delete(`http://localhost:3004/employee/${id}`)
-            .then(() => console.log())
+            .then(() => {
+                getEmployee()
+            })
             .catch((error) => {
                 console.log(error);
             });
     }
     const editEmployee = (id, employee) => {
-        console.log("thisEmployee", employee, id)
         axios
-            .put(`http://localhost:3004/employee/${editId}`, employee)
+            .put(`http://localhost:3004/employee/${id}`, employee)
             .then((data) => {
-                console.log(data)
+                getEmployee()
             })
             .catch((err) => console.log(err));
     };
     useEffect(() => {
         getEmployee()
-        // console.log('comp rendered',employeeDB )
-    }, [employeeDB])
+    }, [])
     return (
         <Box>
             <Formik
                 initialValues={formValues || { ...INITIAL_FORM_STATE }}
                 validationSchema={FORM_VALIDATION}
-                // onSubmit is async thats why table update have no effect
-                onSubmit={values => {
-                    console.log('from onSubmit', values);
-                    postEmployee(values);
-                    // editEmployee(values)
-                    setFormValues(values)
-
+                onSubmit={value => {
+                    console.log(value)
                 }}
                 enableReinitialize
             >
                 {formik => {
-                    // console.log('formik props', formik)
                     return (
                         <Form>
-                            <Grid container spacing={2}>
+                            <Grid container  >
                                 <Grid item xs={12}>
 
-                                    <Grid item xs={6}>
+                                    <Grid item xs={12} >
                                         <TextfieldWrapper
                                             name="name"
                                             label="Name"
@@ -119,7 +96,7 @@ function FormPage() {
                                             label="Income"
                                         />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={12} rowSpacing={1}>
                                         <SelectWrapper
                                             name="profession"
                                             label="Profession"
@@ -131,31 +108,29 @@ function FormPage() {
                                             label="age"
                                         />
                                     </Grid>
-                                    <Grid item xs={12}>
-                                        {/* <ButtonWrapper onClick={() => {
-                                    setSubmit('add')
-                                    console.log(' test from btn submit', submit)
-                                }}>
-                                    Submit Form
-                                </ButtonWrapper> */}
-                                        <Button type='button' fullWidth variant='outlined' onClick={() => {
+                                    <Grid item xs={12} rowSpacing={1}>
+                                        <Button startIcon={<AddIcon />} fullWidth type='button'  variant='outlined' onClick={() => {
                                             formik.submitForm()
-                                            console.log(' test from btn submit', formik.values)
+                                            postEmployee(formik.values);
                                         }}>
-                                            Submit Form
+                                            Add New Employee
                                         </Button>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        {/* <Button fullWidth variant="outlined" onClick={() => setFormValues(savedValue)}>
-                                    Submit saved value
-                                </Button> */}
-                                        <Button fullWidth type='button' variant="outlined" onClick={() => {
-                                            setSubmit('edit')
-                                            console.log('from update button',editId, formValues)
-                                            // editEmployee(editId, formValues)
+                                        {toggle ? <Button startIcon={<RedoIcon />} fullWidth type='button' variant="outlined" onClick={() => {
+                                            formik.submitForm()
+                                            setFormValues(formik.values)
+                                            setToggle(false)
                                         }}>
-                                            Submit updated values
+                                            Submit updated information
                                         </Button>
+                                            :
+                                            <Button startIcon={<DoneIcon />} fullWidth type='button' variant="outlined" onClick={() => {
+                                                editEmployee(editId, formValues)
+                                                setToggle(true)
+                                            }}>
+                                                Done
+                                            </Button>}
                                     </Grid>
 
                                 </Grid>
@@ -164,7 +139,6 @@ function FormPage() {
                     )
                 }}
             </Formik>
-
 
             <TableContainer component={Paper} >
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -194,36 +168,17 @@ function FormPage() {
                                 </TableCell>
                                 <TableCell align="right">
                                     <Button variant="outlined" onClick={() => {
-                                        // console.log("test from edit btn", {
-                                        //     name: row.name,
-                                        //     income: row.income,
-                                        //     profession: row.profession,
-                                        //     age: row.age,
-                                        //     id: row.id,
-                                        // })
-                                        seteditId(row.id)
+                                        setEditId(row.id)
                                         setFormValues({
                                             name: row.name,
                                             income: row.income,
                                             profession: row.profession,
                                             age: row.age,
                                         })
-                                        // console.log('edit button')
-                                        // const thisEmployee = {
-                                        //     name: row.name,
-                                        //     income: row.income,
-                                        //     profession: row.profession,
-                                        //     age: row.age,
-                                        //     id: row.id,
-                                        // }
-                                        // editEmployee(thisEmployee)
-
-                                        // console.log('test',formValues)
                                     }}>
                                         Edit
                                     </Button>
                                     <Button variant="outlined" onClick={() => {
-                                        console.log(row.id)
                                         deleteEmployee(row.id)
                                     }} >
                                         Delete
@@ -231,12 +186,9 @@ function FormPage() {
                                 </TableCell>
                             </TableRow>
                         ))}
-
                     </TableBody>
                 </Table>
             </TableContainer>
-
-
         </Box >
     )
 }

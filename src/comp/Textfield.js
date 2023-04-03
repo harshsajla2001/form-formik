@@ -12,7 +12,7 @@ const TextfieldWrapper = ({
     ...field,
     ...otherProps,
     fullWidth: true,
-    variant: 'outlined'
+    variant: 'outlined',
   };
 
   if (mata && mata.touched && mata.error) {
