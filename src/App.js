@@ -1,14 +1,17 @@
 import { Box } from "@mui/material";
 import FormPage from "./comp/FormPage";
+import Header from "./comp/Header";
 
 
 
 function App() {
   return (
-    <Box >
-    <FormPage/>
+    <Box margin={2} >
+      <Header />
+      <FormPage />
     </Box>
   );
 }
 
-export default App;
+export default App; 
+

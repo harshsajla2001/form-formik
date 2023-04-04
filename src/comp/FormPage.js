@@ -1,13 +1,13 @@
-import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import axios from "axios";
-import { Formik, Form } from 'formik'
-import * as Yup from 'yup'
 import React, { useEffect, useState } from 'react'
+import axios from "axios";
+import * as Yup from 'yup'
+import { Formik, Form } from 'formik'
 import TextfieldWrapper from './Textfield';
 import SelectWrapper from './Select';
 import AddIcon from '@mui/icons-material/Add';
 import RedoIcon from '@mui/icons-material/Redo';
 import DoneIcon from '@mui/icons-material/Done';
+import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 
 
 const INITIAL_FORM_STATE = {
@@ -71,12 +71,13 @@ function FormPage() {
         getEmployee()
     }, [])
     return (
-        <Box>
+        <Box >
             <Formik
                 initialValues={formValues || { ...INITIAL_FORM_STATE }}
                 validationSchema={FORM_VALIDATION}
                 onSubmit={value => {
                     console.log(value)
+                    
                 }}
                 enableReinitialize
             >
@@ -90,10 +91,12 @@ function FormPage() {
                                         <TextfieldWrapper
                                             name="name"
                                             label="Name"
+                                            sx={{margin:'.5rem 0rem'}}
                                         />
                                         <TextfieldWrapper
                                             name="income"
                                             label="Income"
+                                            sx={{margin:'.5rem 0rem'}}
                                         />
                                     </Grid>
                                     <Grid item xs={12} rowSpacing={1}>
@@ -102,22 +105,25 @@ function FormPage() {
                                             label="Profession"
                                             placeholder='profession'
                                             options={professionOption}
+                                            sx={{margin:'.5rem 0rem'}}
                                         />
                                         <TextfieldWrapper
                                             name="age"
                                             label="age"
+                                            sx={{margin:'.5rem 0rem'}}
                                         />
                                     </Grid>
                                     <Grid item xs={12} rowSpacing={1}>
-                                        <Button startIcon={<AddIcon />} fullWidth type='button'  variant='outlined' onClick={() => {
+                                        <Button sx={{margin:'.5rem 0rem'}} startIcon={<AddIcon />} fullWidth type='button'  variant='outlined' onClick={() => {
                                             formik.submitForm()
                                             postEmployee(formik.values);
+                                            formik.resetForm();
                                         }}>
                                             Add New Employee
                                         </Button>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        {toggle ? <Button startIcon={<RedoIcon />} fullWidth type='button' variant="outlined" onClick={() => {
+                                        {toggle ? <Button sx={{margin:'.5rem 0rem'}} startIcon={<RedoIcon />} fullWidth type='button' variant="outlined" onClick={() => {
                                             formik.submitForm()
                                             setFormValues(formik.values)
                                             setToggle(false)
@@ -128,6 +134,7 @@ function FormPage() {
                                             <Button startIcon={<DoneIcon />} fullWidth type='button' variant="outlined" onClick={() => {
                                                 editEmployee(editId, formValues)
                                                 setToggle(true)
+                                                formik.resetForm();
                                             }}>
                                                 Done
                                             </Button>}
@@ -140,15 +147,15 @@ function FormPage() {
                 }}
             </Formik>
 
-            <TableContainer component={Paper} >
+            <TableContainer component={Paper} sx={{margin:'.5rem 0rem'}}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell align="right">Profession</TableCell>
-                            <TableCell align="right">Age</TableCell>
-                            <TableCell align="right">Income</TableCell>
-                            <TableCell align="right">Actions</TableCell>
+                            <TableCell><Typography variant='h6'>Name</Typography></TableCell>
+                            <TableCell align="right"><Typography variant='h6'>Profession</Typography></TableCell>
+                            <TableCell align="right"><Typography variant='h6'>Age</Typography></TableCell>
+                            <TableCell align="right"><Typography variant='h6'>Income</Typography></TableCell>
+                            <TableCell align="right"><Typography variant='h6'>Actions</Typography></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -167,7 +174,7 @@ function FormPage() {
                                     {row.income}
                                 </TableCell>
                                 <TableCell align="right">
-                                    <Button variant="outlined" onClick={() => {
+                                    <Button sx={{margin:'0px 5px 0px 0px'}} variant="outlined" onClick={() => {
                                         setEditId(row.id)
                                         setFormValues({
                                             name: row.name,

@@ -1,74 +1,11 @@
 {
   "employee": [
     {
-      "name": "harsh sajla",
-      "income": "456",
-      "profession": "reactDev",
-      "age": "12456",
-      "id": 6
-    },
-    {
-      "name": "new edited",
-      "income": "456",
-      "profession": "reactDev",
-      "age": "12456",
-      "id": 8
-    },
-    {
-      "name": "test edit",
-      "income": "456",
-      "profession": "reactDev",
-      "age": "12456",
-      "id": 9
-    },
-    {
-      "name": "test3",
-      "income": "456",
-      "profession": "dotNetDevloper",
-      "age": "44",
-      "id": 10
-    },
-    {
-      "name": "test2",
-      "income": "456",
-      "profession": "dotNetDevloper",
-      "age": "45",
-      "id": 11
-    },
-    {
-      "name": "shree ram",
-      "income": "44",
-      "profession": "PythonDevloper",
-      "age": "55",
-      "id": 12
-    },
-    {
-      "name": "test3",
-      "income": "456",
-      "profession": "dotNetDevloper",
-      "age": "12456",
-      "id": 13
-    },
-    {
-      "name": "test3",
-      "income": "456",
-      "profession": "dotNetDevloper",
-      "age": "44",
-      "id": 14
-    },
-    {
       "name": "harsh",
-      "income": "54",
-      "profession": "PythonDevloper",
-      "age": "22",
-      "id": 15
-    },
-    {
-      "name": "kartika sharma",
-      "income": "20000",
+      "income": "9000000",
       "profession": "reactDevloper",
-      "age": "20",
-      "id": 16
+      "age": "56",
+      "id": 1
     }
   ]
 }
